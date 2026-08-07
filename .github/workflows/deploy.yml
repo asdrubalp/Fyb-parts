@@ -18,13 +18,15 @@ jobs:
           cache: 'npm'
 
       - name: Install dependencies
+        working-directory: ./fyb-parts
         run: npm install
 
       - name: Build project
+        working-directory: ./fyb-parts
         run: npm run build
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./dist
+          publish_dir: ./fyb-parts/dist
