@@ -1276,208 +1276,211 @@ export default function App() {
       )}
 
       {/* 8. VISTA DE LA TIENDA E INTERFAZ DE PRODUCTOS Y CARRITO */}
+      {/* 8. VISTA DE LA TIENDA E INTERFAZ DE PRODUCTOS Y CARRITO */}
       {vistaActual === 'tienda' && (
-        productoSeleccionado ? (
-          <div className="py-12 bg-gray-50 w-full min-h-[85vh] px-6">
-            <div className="max-w-4xl mx-auto">
-              <button 
-                onClick={() => setProductoSeleccionado(null)}
-                className="text-xs font-bold text-slate-600 hover:text-slate-900 mb-6 flex items-center space-x-2 bg-white px-4 py-2 rounded-full shadow-sm border border-gray-200 w-max transition"
-              >
-                <span>← Volver al catálogo</span>
-              </button>
-
-              <div className="bg-white p-8 md:p-12 rounded-3xl shadow-sm border border-gray-100 grid grid-cols-1 md:grid-cols-2 gap-10">
-                <div className="flex items-center justify-center bg-gray-50 rounded-2xl p-6 border border-gray-100">
-                  <img 
-                    src={productoSeleccionado.imagen_url} 
-                    alt={productoSeleccionado.nombre} 
-                    className="max-h-[380px] object-contain rounded-xl"
-                  />
-                </div>
-
-                <div className="flex flex-col justify-start text-left">
-                  <span className="text-[10px] font-extrabold text-[#5A8073] uppercase tracking-wider bg-[#5A8073]/10 px-3 py-1 rounded-full w-max mb-3">
-                    {productoSeleccionado.categoria}
-                  </span>
-                  <h1 className="text-2xl md:text-3xl font-black text-slate-900 mb-2">
-                    {productoSeleccionado.nombre}
-                  </h1>
-                  <div className="text-3xl font-black text-[#5A8073] mb-6">
-                    ${productoSeleccionado.precio}
-                  </div>
-
-                  <div className="bg-gray-50 rounded-2xl p-4 text-xs space-y-2.5 border border-gray-100 mb-8">
-                    <div className="flex justify-between border-b border-gray-200/60 pb-2">
-                      <span className="font-bold text-slate-500 uppercase">Vehículo:</span>
-                      <span className="font-semibold text-slate-800">{productoSeleccionado.vehiculo || 'Genérico'}</span>
-                    </div>
-                    <div className="flex justify-between border-b border-gray-200/60 pb-2">
-                      <span className="font-bold text-slate-500 uppercase">Marca:</span>
-                      <span className="font-semibold text-slate-800">{productoSelegmento || productoSeleccionado.marca || 'N/A'}</span>
-                    </div>
-                    <div className="flex justify-between border-b border-gray-200/60 pb-2">
-                      <span className="font-bold text-slate-500 uppercase">Serial:</span>
-                      <span className="font-semibold text-slate-800 font-mono">{productoSeleccionado.serial || 'N/A'}</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="font-bold text-slate-500 uppercase">Años:</span>
-                      <span className="font-semibold text-slate-800">{productoSeleccionado.anio || 'Todos'}</span>
-                    </div>
-                  </div>
-
-                  <button 
-                    onClick={() => { agregarAlPedido(productoSeleccionado); setProductoSeleccionado(null); }}
-                    className="w-full bg-[#5A8073] text-white py-4 rounded-full font-bold text-xs hover:opacity-90 transition shadow-lg tracking-wider"
-                  >
-                    AÑADIR AL PEDIDO
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-         : (
-        <section className="py-8 bg-gray-50 w-full min-h-screen">
-          <div className="w-full px-6 md:px-12 max-w-7xl mx-auto">
-            <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-              
-              <div className="bg-white p-6 rounded-3xl shadow-sm border border-gray-100 h-fit">
-                <h3 className="font-black text-xl text-slate-900 mb-6 flex items-center gap-2">
-                  <svg className="w-5 h-5 text-[#5A8073]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"/></svg>
-                  CATEGORÍAS
-                </h3>
-                <div className="flex flex-col space-y-2">
-                  {listaCategoriasSidebar.map((cat, idx) => (
-                    <button
-                      key={idx}
-                      onClick={() => setCategoriaSeleccionada(cat)}
-                      className={`text-left px-4 py-2.5 rounded-xl font-semibold text-sm transition ${categoriaSeleccionada === cat ? 'bg-[#5A8073] text-white shadow-md' : 'text-slate-600 hover:bg-gray-100'}`}
-                    >
-                      {cat}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              <div className="lg:col-span-2 flex flex-col gap-6">
-                <div className="flex flex-col md:flex-row items-center justify-between bg-white p-6 rounded-3xl shadow-sm border border-gray-100 gap-4">
-                  <h2 className="text-xl font-black text-slate-900 uppercase">Catálogo: {categoriaSeleccionada}</h2>
-                  <div className="relative w-full md:w-72">
-                    <input 
-                      type="text" 
-                      placeholder="Buscar repuesto..." 
-                      value={busquedaTienda}
-                      onChange={(e) => setBusquedaTienda(e.target.value)}
-                      className="w-full bg-gray-100 border-none rounded-full py-2 px-4 pl-10 focus:ring-2 focus:ring-[#5A8073] outline-none text-sm text-slate-900"
-                    />
-                    <svg className="w-4 h-4 absolute left-3.5 top-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                    </svg>
-                  </div>
-                </div>
-
-                {productosFiltrados.length === 0 ? (
-                  <div className="bg-white p-16 rounded-3xl shadow-sm border border-gray-100 text-center">
-                    <p className="text-slate-500 font-semibold text-lg">No se encontraron repuestos en esta categoría.</p>
-                  </div>
-                ) : (
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    {productosFiltrados.map((producto) => (
-                      <div 
-                        onClick={() => setProductoSeleccionado(producto)}
-                        className="bg-white p-5 rounded-3xl shadow-sm border border-gray-100 text-center flex flex-col items-center cursor-pointer hover:shadow-md transition group"
-                      >
-                        <img 
-                          src={producto.imagen_url} 
-                          alt={producto.nombre} 
-                          className="w-full h-48 object-cover rounded-2xl mb-4 group-hover:scale-[1.02] transition duration-300"
-                        />
-                        
-                        <span className="text-[10px] font-extrabold text-[#5A8073] uppercase tracking-wider bg-[#5A8073]/10 px-3 py-1 rounded-full mb-2">
-                          {producto.categoria}
-                        </span>
-                        
-                        <h3 className="font-black text-slate-900 text-base group-hover:text-[#5A8073] transition">
-                          {producto.nombre}
-                        </h3>
-                        
-                        {/* Especificaciones técnicas limpias y profesionales sin emojis */}
-                        <div className="mt-3 w-full bg-gray-50 rounded-2xl p-3 text-xs space-y-1.5 text-left border border-gray-100/80">
-                          <div className="flex justify-between items-center">
-                            <span className="font-bold text-slate-500 uppercase text-[10px]">Vehículo:</span>
-                            <span className="font-semibold text-slate-800 text-right">{producto.vehiculo || 'Genérico'}</span>
-                          </div>
-                          <div className="flex justify-between items-center">
-                            <span className="font-bold text-slate-500 uppercase text-[10px]">Marca:</span>
-                            <span className="font-semibold text-slate-800 text-right">{producto.marca || 'N/A'}</span>
-                          </div>
-                          <div className="flex justify-between items-center">
-                            <span className="font-bold text-slate-500 uppercase text-[10px]">Serial:</span>
-                            <span className="font-semibold text-slate-800 text-right font-mono">{producto.serial || 'N/A'}</span>
-                          </div>
-                          <div className="flex justify-between items-center">
-                            <span className="font-bold text-slate-500 uppercase text-[10px]">Años:</span>
-                            <span className="font-semibold text-slate-800 text-right">{producto.anio || 'Todos'}</span>
-                          </div>
-                        </div>
-
-                        <div className="w-full flex items-center justify-between mt-5 px-1" onClick={(e) => e.stopPropagation()}>
-                          <span className="font-black text-xl text-slate-900">${producto.precio}</span>
-                          <button 
-                            onClick={() => agregarAlPedido(producto)}
-                            className="bg-[#5A8073] text-white px-5 py-2.5 rounded-full font-bold text-xs hover:opacity-90 transition shadow-md"
-                          >
-                            AGREGAR
-                          </button>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
-
-
-              <div className="bg-white p-6 rounded-3xl shadow-sm border border-gray-100 h-fit">
-                <h3 className="font-black text-xl text-slate-900 mb-6 flex items-center gap-2">
-                  <svg className="w-5 h-5 text-[#5A8073]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
-                  TU PEDIDO
-                </h3>
-
-                {carrito.length === 0 ? (
-                  <div className="text-center py-10 text-slate-400 font-medium border-b border-gray-100 pb-10">
-                    Vacío
-                  </div>
-                ) : (
-                  <div className="flex flex-col space-y-4 max-h-60 overflow-y-auto mb-4 pr-1">
-                    {carrito.map(item => (
-                      <div key={item.id} className="flex justify-between items-center text-sm border-b border-gray-50 pb-2">
-                        <div>
-                          <p className="font-bold text-slate-800">{item.nombre}</p>
-                          <span className="text-xs text-slate-500">Cant: {item.cantidad} x ${Number(item.precio).toFixed(2)}</span>
-                        </div>
-                        <button onClick={() => eliminarDelCarrito(item.id)} className="text-red-500 hover:text-red-700 font-bold text-xs">✕</button>
-                      </div>
-                    ))}
-                  </div>
-                )}
-
-                <div className="pt-4 border-t border-gray-200 flex justify-between items-center mb-6">
-                  <span className="font-bold text-slate-700">Total:</span>
-                  <span className="text-2xl font-black text-slate-900">${calcularTotal()}</span>
-                </div>
-
+        <>
+          {productoSeleccionado ? (
+            <div className="py-12 bg-gray-50 w-full min-h-[85vh] px-6">
+              <div className="max-w-4xl mx-auto">
                 <button 
-                  disabled={carrito.length === 0}
-                  className={`w-full py-3.5 rounded-full font-bold text-white transition shadow-md flex items-center justify-center gap-2 ${carrito.length === 0 ? 'bg-gray-300 cursor-not-allowed' : 'bg-[#22c55e] hover:opacity-90'}`}
+                  onClick={() => setProductoSeleccionado(null)}
+                  className="text-xs font-bold text-slate-600 hover:text-slate-900 mb-6 flex items-center space-x-2 bg-white px-4 py-2 rounded-full shadow-sm border border-gray-200 w-max transition"
                 >
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7"/></svg>
-                  PROCESAR PEDIDO
+                  <span>← Volver al catálogo</span>
                 </button>
-              </div>
 
+                <div className="bg-white p-8 md:p-12 rounded-3xl shadow-sm border border-gray-100 grid grid-cols-1 md:grid-cols-2 gap-10">
+                  <div className="flex items-center justify-center bg-gray-50 rounded-2xl p-6 border border-gray-100">
+                    <img 
+                      src={productoSeleccionado.imagen_url} 
+                      alt={productoSeleccionado.nombre} 
+                      className="max-h-[380px] object-contain rounded-xl"
+                    />
+                  </div>
+
+                  <div className="flex flex-col justify-start text-left">
+                    <span className="text-[10px] font-extrabold text-[#5A8073] uppercase tracking-wider bg-[#5A8073]/10 px-3 py-1 rounded-full w-max mb-3">
+                      {productoSeleccionado.categoria}
+                    </span>
+                    <h1 className="text-2xl md:text-3xl font-black text-slate-900 mb-2">
+                      {productoSeleccionado.nombre}
+                    </h1>
+                    <div className="text-3xl font-black text-[#5A8073] mb-6">
+                      ${productoSeleccionado.precio}
+                    </div>
+
+                    <div className="bg-gray-50 rounded-2xl p-4 text-xs space-y-2.5 border border-gray-100 mb-8">
+                      <div className="flex justify-between border-b border-gray-200/60 pb-2">
+                        <span className="font-bold text-slate-500 uppercase">Vehículo:</span>
+                        <span className="font-semibold text-slate-800">{productoSeleccionado.vehiculo || 'Genérico'}</span>
+                      </div>
+                      <div className="flex justify-between border-b border-gray-200/60 pb-2">
+                        <span className="font-bold text-slate-500 uppercase">Marca:</span>
+                        <span className="font-semibold text-slate-800">{productoSeleccionado.marca || 'N/A'}</span>
+                      </div>
+                      <div className="flex justify-between border-b border-gray-200/60 pb-2">
+                        <span className="font-bold text-slate-500 uppercase">Serial:</span>
+                        <span className="font-semibold text-slate-800 font-mono">{productoSeleccionado.serial || 'N/A'}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="font-bold text-slate-500 uppercase">Años:</span>
+                        <span className="font-semibold text-slate-800">{productoSeleccionado.anio || 'Todos'}</span>
+                      </div>
+                    </div>
+
+                    <button 
+                      onClick={() => { agregarAlPedido(productoSeleccionado); setProductoSeleccionado(null); }}
+                      className="w-full bg-[#5A8073] text-white py-4 rounded-full font-bold text-xs hover:opacity-90 transition shadow-lg tracking-wider"
+                    >
+                      AÑADIR AL PEDIDO
+                    </button>
+                  </div>
+                </div>
+              </div>
             </div>
-          </div>
-        </section>
+          ) : (
+            <section className="py-8 bg-gray-50 w-full min-h-screen">
+              <div className="w-full px-6 md:px-12 max-w-7xl mx-auto">
+                <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+                  
+                  <div className="bg-white p-6 rounded-3xl shadow-sm border border-gray-100 h-fit">
+                    <h3 className="font-black text-xl text-slate-900 mb-6 flex items-center gap-2">
+                      <svg className="w-5 h-5 text-[#5A8073]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"/></svg>
+                      CATEGORÍAS
+                    </h3>
+                    <div className="flex flex-col space-y-2">
+                      {listaCategoriasSidebar.map((cat, idx) => (
+                        <button
+                          key={idx}
+                          onClick={() => setCategoriaSeleccionada(cat)}
+                          className={`text-left px-4 py-2.5 rounded-xl font-semibold text-sm transition ${categoriaSeleccionada === cat ? 'bg-[#5A8073] text-white shadow-md' : 'text-slate-600 hover:bg-gray-100'}`}
+                        >
+                          {cat}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="lg:col-span-2 flex flex-col gap-6">
+                    <div className="flex flex-col md:flex-row items-center justify-between bg-white p-6 rounded-3xl shadow-sm border border-gray-100 gap-4">
+                      <h2 className="text-xl font-black text-slate-900 uppercase">Catálogo: {categoriaSeleccionada}</h2>
+                      <div className="relative w-full md:w-72">
+                        <input 
+                          type="text" 
+                          placeholder="Buscar repuesto..." 
+                          value={busquedaTienda}
+                          onChange={(e) => setBusquedaTienda(e.target.value)}
+                          className="w-full bg-gray-100 border-none rounded-full py-2 px-4 pl-10 focus:ring-2 focus:ring-[#5A8073] outline-none text-sm text-slate-900"
+                        />
+                        <svg className="w-4 h-4 absolute left-3.5 top-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                        </svg>
+                      </div>
+                    </div>
+
+                    {productosFiltrados.length === 0 ? (
+                      <div className="bg-white p-16 rounded-3xl shadow-sm border border-gray-100 text-center">
+                        <p className="text-slate-500 font-semibold text-lg">No se encontraron repuestos en esta categoría.</p>
+                      </div>
+                    ) : (
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        {productosFiltrados.map((producto, idx) => (
+                          <div 
+                            key={producto.id || idx}
+                            onClick={() => setProductoSeleccionado(producto)}
+                            className="bg-white p-5 rounded-3xl shadow-sm border border-gray-100 text-center flex flex-col items-center cursor-pointer hover:shadow-md transition group"
+                          >
+                            <img 
+                              src={producto.imagen_url} 
+                              alt={producto.nombre} 
+                              className="w-full h-48 object-cover rounded-2xl mb-4 group-hover:scale-[1.02] transition duration-300"
+                            />
+                            
+                            <span className="text-[10px] font-extrabold text-[#5A8073] uppercase tracking-wider bg-[#5A8073]/10 px-3 py-1 rounded-full mb-2">
+                              {producto.categoria}
+                            </span>
+                            
+                            <h3 className="font-black text-slate-900 text-base group-hover:text-[#5A8073] transition">
+                              {producto.nombre}
+                            </h3>
+                            
+                            <div className="mt-3 w-full bg-gray-50 rounded-2xl p-3 text-xs space-y-1.5 text-left border border-gray-100/80">
+                              <div className="flex justify-between items-center">
+                                <span className="font-bold text-slate-500 uppercase text-[10px]">Vehículo:</span>
+                                <span className="font-semibold text-slate-800 text-right">{producto.vehiculo || 'Genérico'}</span>
+                              </div>
+                              <div className="flex justify-between items-center">
+                                <span className="font-bold text-slate-500 uppercase text-[10px]">Marca:</span>
+                                <span className="font-semibold text-slate-800 text-right">{producto.marca || 'N/A'}</span>
+                              </div>
+                              <div className="flex justify-between items-center">
+                                <span className="font-bold text-slate-500 uppercase text-[10px]">Serial:</span>
+                                <span className="font-semibold text-slate-800 text-right font-mono">{producto.serial || 'N/A'}</span>
+                              </div>
+                              <div className="flex justify-between items-center">
+                                <span className="font-bold text-slate-500 uppercase text-[10px]">Años:</span>
+                                <span className="font-semibold text-slate-800 text-right">{producto.anio || 'Todos'}</span>
+                              </div>
+                            </div>
+
+                            <div className="w-full flex items-center justify-between mt-5 px-1" onClick={(e) => e.stopPropagation()}>
+                              <span className="font-black text-xl text-slate-900">${producto.precio}</span>
+                              <button 
+                                onClick={() => agregarAlPedido(producto)}
+                                className="bg-[#5A8073] text-white px-5 py-2.5 rounded-full font-bold text-xs hover:opacity-90 transition shadow-md"
+                              >
+                                AGREGAR
+                              </button>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="bg-white p-6 rounded-3xl shadow-sm border border-gray-100 h-fit">
+                    <h3 className="font-black text-xl text-slate-900 mb-6 flex items-center gap-2">
+                      <svg className="w-5 h-5 text-[#5A8073]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+                      TU PEDIDO
+                    </h3>
+
+                    {carrito.length === 0 ? (
+                      <div className="text-center py-10 text-slate-400 font-medium border-b border-gray-100 pb-10">
+                        Vacío
+                      </div>
+                    ) : (
+                      <div className="flex flex-col space-y-4 max-h-60 overflow-y-auto mb-4 pr-1">
+                        {carrito.map(item => (
+                          <div key={item.id} className="flex justify-between items-center text-sm border-b border-gray-50 pb-2">
+                            <div>
+                              <p className="font-bold text-slate-800">{item.nombre}</p>
+                              <span className="text-xs text-slate-500">Cant: {item.cantidad} x ${Number(item.precio).toFixed(2)}</span>
+                            </div>
+                            <button onClick={() => eliminarDelCarrito(item.id)} className="text-red-500 hover:text-red-700 font-bold text-xs">✕</button>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+
+                    <div className="pt-4 border-t border-gray-200 flex justify-between items-center mb-6">
+                      <span className="font-bold text-slate-700">Total:</span>
+                      <span className="text-2xl font-black text-slate-900">${calcularTotal()}</span>
+                    </div>
+
+                    <button 
+                      disabled={carrito.length === 0}
+                      className={`w-full py-3.5 rounded-full font-bold text-white transition shadow-md flex items-center justify-center gap-2 ${carrito.length === 0 ? 'bg-gray-300 cursor-not-allowed' : 'bg-[#22c55e] hover:opacity-90'}`}
+                    >
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7"/></svg>
+                      PROCESAR PEDIDO
+                    </button>
+                  </div>
+
+                </div>
+              </div>
+            </section>
+          )}
+        </>
       )}
 
     </div>
