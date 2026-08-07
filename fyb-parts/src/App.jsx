@@ -69,6 +69,7 @@ export default function App() {
   const [nuevaMarca, setNuevaMarca] = useState('');
   const [nuevoSerial, setNuevoSerial] = useState('');
   const [nuevoAnio, setNuevoAnio] = useState('');
+  const [nuevaDescripcion, setNuevaDescripcion] = useState('');
 
   const [productoSeleccionado, setProductoSeleccionado] = useState(null);
 
@@ -213,6 +214,7 @@ export default function App() {
         marca: nuevaMarca,
         serial: nuevoSerial,
         anio: nuevoAnio,
+        descripcion: nuevaDescripcion, // <-- ¡NUEVA LÍNEA AQUÍ!
         imagen_url: urlImagen || 'https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?q=80&w=400'
       }]);
 
@@ -227,6 +229,7 @@ export default function App() {
       setNuevaMarca('');
       setNuevoSerial('');
       setNuevoAnio('');
+      setNuevaDescripcion(''); // <-- ¡NUEVA LÍNEA AQUÍ!
       setNuevaImagen('');
       setArchivoImagen(null);
       cargarProductos();
@@ -320,6 +323,8 @@ export default function App() {
             {usuarioActual?.rol === 'admin' && (
               <button onClick={() => setVistaActual('admin')} className={`hover:opacity-70 transition pb-1 text-red-600 ${vistaActual === 'admin' ? 'border-b-2 border-red-600' : ''}`}>Panel Admin</button>
             )}
+
+            
 
             {usuarioActual ? (
               <button 
@@ -1179,6 +1184,17 @@ export default function App() {
                   />
                 </div>
               </div>
+              
+              <div className="flex flex-col gap-1 sm:col-span-2 mt-4">
+                <label className="block text-xs font-bold text-slate-700 uppercase mb-1.5">Descripción (Opcional)</label>
+                <textarea
+                  name="descripcion"
+                  value={nuevaDescripcion} 
+                  onChange={(e) => setNuevaDescripcion(e.target.value)}
+                  placeholder="Ej: Camisa oficial del equipo Fórmula SAE UCV, diseño en azul marino con detalles en negro, 100% algodón..."
+                  className="w-full bg-gray-50 border border-gray-200 rounded-2xl py-3 px-4 outline-none text-sm text-slate-900 focus:ring-2 focus:ring-[#5A8073] min-h-[100px] resize-y"
+                />
+              </div>
 
               <div>
                 <label className="block text-xs font-bold text-slate-700 uppercase mb-1.5">URL de la Imagen (Opcional)</label>
@@ -1276,69 +1292,125 @@ export default function App() {
       )}
 
       {/* 8. VISTA DE LA TIENDA E INTERFAZ DE PRODUCTOS Y CARRITO */}
-      {/* 8. VISTA DE LA TIENDA E INTERFAZ DE PRODUCTOS Y CARRITO */}
       {vistaActual === 'tienda' && (
         <>
-          {productoSeleccionado ? (
-            <div className="py-12 bg-gray-50 w-full min-h-[85vh] px-6">
-              <div className="max-w-4xl mx-auto">
-                <button 
-                  onClick={() => setProductoSeleccionado(null)}
-                  className="text-xs font-bold text-slate-600 hover:text-slate-900 mb-6 flex items-center space-x-2 bg-white px-4 py-2 rounded-full shadow-sm border border-gray-200 w-max transition"
-                >
-                  <span>← Volver al catálogo</span>
-                </button>
-
-                <div className="bg-white p-8 md:p-12 rounded-3xl shadow-sm border border-gray-100 grid grid-cols-1 md:grid-cols-2 gap-10">
-                  <div className="flex items-center justify-center bg-gray-50 rounded-2xl p-6 border border-gray-100">
-                    <img 
-                      src={productoSeleccionado.imagen_url} 
-                      alt={productoSeleccionado.nombre} 
-                      className="max-h-[380px] object-contain rounded-xl"
-                    />
-                  </div>
-
-                  <div className="flex flex-col justify-start text-left">
-                    <span className="text-[10px] font-extrabold text-[#5A8073] uppercase tracking-wider bg-[#5A8073]/10 px-3 py-1 rounded-full w-max mb-3">
-                      {productoSeleccionado.categoria}
-                    </span>
-                    <h1 className="text-2xl md:text-3xl font-black text-slate-900 mb-2">
-                      {productoSeleccionado.nombre}
-                    </h1>
-                    <div className="text-3xl font-black text-[#5A8073] mb-6">
-                      ${productoSeleccionado.precio}
-                    </div>
-
-                    <div className="bg-gray-50 rounded-2xl p-4 text-xs space-y-2.5 border border-gray-100 mb-8">
-                      <div className="flex justify-between border-b border-gray-200/60 pb-2">
-                        <span className="font-bold text-slate-500 uppercase">Vehículo:</span>
-                        <span className="font-semibold text-slate-800">{productoSeleccionado.vehiculo || 'Genérico'}</span>
-                      </div>
-                      <div className="flex justify-between border-b border-gray-200/60 pb-2">
-                        <span className="font-bold text-slate-500 uppercase">Marca:</span>
-                        <span className="font-semibold text-slate-800">{productoSeleccionado.marca || 'N/A'}</span>
-                      </div>
-                      <div className="flex justify-between border-b border-gray-200/60 pb-2">
-                        <span className="font-bold text-slate-500 uppercase">Serial:</span>
-                        <span className="font-semibold text-slate-800 font-mono">{productoSeleccionado.serial || 'N/A'}</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="font-bold text-slate-500 uppercase">Años:</span>
-                        <span className="font-semibold text-slate-800">{productoSeleccionado.anio || 'Todos'}</span>
-                      </div>
-                    </div>
-
+        {/* VISTA DETALLE DE PRODUCTO A PANTALLA COMPLETA */}
+              {productoSeleccionado ? (
+                <div className="py-12 bg-gray-50 w-full min-h-[85vh] px-6 overflow-y-auto">
+                  <div className="max-w-5xl mx-auto">
                     <button 
-                      onClick={() => { agregarAlPedido(productoSeleccionado); setProductoSeleccionado(null); }}
-                      className="w-full bg-[#5A8073] text-white py-4 rounded-full font-bold text-xs hover:opacity-90 transition shadow-lg tracking-wider"
+                      onClick={() => setProductoSeleccionado(null)}
+                      className="text-xs font-bold text-slate-600 hover:text-slate-900 mb-6 flex items-center space-x-2 bg-white px-4 py-2 rounded-full shadow-sm border border-gray-200 w-max transition"
                     >
-                      AÑADIR AL PEDIDO
+                      <span>← Volver al catálogo</span>
                     </button>
+
+                    <div className="bg-white p-8 md:p-12 rounded-3xl shadow-sm border border-gray-100 grid grid-cols-1 md:grid-cols-2 gap-10 mb-12">
+                      {/* Imagen del Producto */}
+                      <div className="flex items-center justify-center bg-gray-50 rounded-2xl p-6 border border-gray-100">
+                        <img 
+                          src={productoSeleccionado.imagen_url} 
+                          alt={productoSeleccionado.nombre} 
+                          className="max-h-[450px] object-contain rounded-xl"
+                        />
+                      </div>
+
+                      {/* Detalles del Producto */}
+                      <div className="flex flex-col justify-start text-left">
+                        <span className="text-[10px] font-extrabold text-[#5A8073] uppercase tracking-wider bg-[#5A8073]/10 px-3 py-1 rounded-full w-max mb-3">
+                          {productoSeleccionado.categoria}
+                        </span>
+                        <h1 className="text-3xl md:text-4xl font-black mb-2 capitalize" style={{ color: '#0f172a' }}>
+                          {productoSeleccionado.nombre}
+                        </h1>
+                        <div className="text-3xl font-black text-[#5A8073] mb-6">
+                          ${productoSeleccionado.precio}
+                        </div>
+
+                        {/* Descripción del Producto (Siempre visible) */}
+                        <div className="mb-6">
+                          <h4 className="text-sm font-bold text-slate-700 uppercase mb-2">Descripción</h4>
+                          <p className="text-sm text-slate-600 leading-relaxed">
+                            {productoSeleccionado.descripcion ? productoSeleccionado.descripcion : 'No hay descripción detallada disponible para este artículo en este momento.'}
+                          </p>
+                        </div>
+
+                        <div className="bg-gray-50 rounded-2xl p-4 text-xs space-y-2.5 border border-gray-100 mb-8">
+                          <div className="flex justify-between border-b border-gray-200/60 pb-2">
+                            <span className="font-bold text-slate-500 uppercase">Vehículo:</span>
+                            <span className="font-semibold text-slate-800">{productoSeleccionado.vehiculo || 'Genérico'}</span>
+                          </div>
+                          <div className="flex justify-between border-b border-gray-200/60 pb-2">
+                            <span className="font-bold text-slate-500 uppercase">Marca:</span>
+                            <span className="font-semibold text-slate-800">{productoSeleccionado.marca || 'N/A'}</span>
+                          </div>
+                          <div className="flex justify-between border-b border-gray-200/60 pb-2">
+                            <span className="font-bold text-slate-500 uppercase">Serial:</span>
+                            <span className="font-semibold text-slate-800 font-mono">{productoSeleccionado.serial || 'N/A'}</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span className="font-bold text-slate-500 uppercase">Años:</span>
+                            <span className="font-semibold text-slate-800">{productoSeleccionado.anio || 'Todos'}</span>
+                          </div>
+                        </div>
+
+                        <button 
+                          onClick={() => { agregarAlPedido(productoSeleccionado); setProductoSeleccionado(null); }}
+                          className="w-full bg-[#5A8073] text-white py-4 rounded-full font-bold text-xs hover:opacity-90 transition shadow-lg tracking-wider uppercase mt-auto"
+                        >
+                          AÑADIR AL PEDIDO
+                        </button>
+                      </div>
+                    </div>
+
+                    {/* SECCIÓN "TAMBIÉN TE PUEDE INTERESAR" */}
+                    <div className="mt-12">
+                      <h3 className="text-xl font-black text-slate-900 uppercase mb-6 border-b-2 border-[#5A8073] pb-2 inline-block">
+                        También te puede interesar
+                      </h3>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
+                        {productos
+                          .filter(p => p.categoria === productoSeleccionado.categoria && p.id !== productoSeleccionado.id)
+                          .slice(0, 4) // Mostrar máximo 4 productos relacionados
+                          .map((relacionado) => (
+                            <div 
+                              key={relacionado.id}
+                              onClick={() => {
+                                // Al hacer clic, hace un scroll suave hacia arriba y cambia el producto
+                                window.scrollTo({ top: 0, behavior: 'smooth' });
+                                setProductoSeleccionado(relacionado);
+                              }}
+                              className="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 flex flex-col items-center cursor-pointer hover:shadow-md hover:border-[#5A8073]/30 transition group h-full"
+                            >
+                              <img 
+                                src={relacionado.imagen_url} 
+                                alt={relacionado.nombre} 
+                                className="w-full h-32 object-cover rounded-xl mb-3 group-hover:scale-[1.02] transition duration-300"
+                              />
+                              <h4 className="font-bold text-slate-900 text-xs text-center group-hover:text-[#5A8073] transition line-clamp-2 mb-2 leading-tight capitalize h-8">
+                                {relacionado.nombre}
+                              </h4>
+                              <div className="w-full flex items-center justify-between mt-auto pt-2 border-t border-gray-50">
+                                <span className="font-black text-sm text-[#5A8073]">${relacionado.precio}</span>
+                                <button className="text-[9px] font-bold text-white bg-slate-800 px-3 py-1.5 rounded-full hover:bg-slate-700 transition">
+                                  Ver Detalles
+                                </button>
+                              </div>
+                            </div>
+                          ))
+                        }
+                        
+                        {/* Mensaje por si no hay relacionados */}
+                        {productos.filter(p => p.categoria === productoSeleccionado.categoria && p.id !== productoSeleccionado.id).length === 0 && (
+                          <div className="col-span-full text-center text-slate-500 py-8 text-sm">
+                            No hay otros artículos en esta categoría por el momento.
+                          </div>
+                        )}
+                      </div>
+                    </div>
                   </div>
                 </div>
-              </div>
-            </div>
-          ) : (
+              ) : (
             <section className="py-8 bg-gray-50 w-full min-h-screen">
               <div className="w-full px-6 md:px-12 max-w-7xl mx-auto">
                 <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
@@ -1383,56 +1455,55 @@ export default function App() {
                         <p className="text-slate-500 font-semibold text-lg">No se encontraron repuestos en esta categoría.</p>
                       </div>
                     ) : (
-                      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 w-full">
                         {productosFiltrados.map((producto, idx) => (
                           <div 
                             key={producto.id || idx}
                             onClick={() => setProductoSeleccionado(producto)}
-                            className="bg-white p-5 rounded-3xl shadow-sm border border-gray-100 text-center flex flex-col items-center cursor-pointer hover:shadow-md transition group"
+                            className="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 flex flex-col items-center cursor-pointer hover:shadow-md hover:border-[#5A8073]/30 transition group h-full"
                           >
-                            <img 
-                              src={producto.imagen_url} 
-                              alt={producto.nombre} 
-                              className="w-full h-48 object-cover rounded-2xl mb-4 group-hover:scale-[1.02] transition duration-300"
-                            />
-                            
-                            <span className="text-[10px] font-extrabold text-[#5A8073] uppercase tracking-wider bg-[#5A8073]/10 px-3 py-1 rounded-full mb-2">
-                              {producto.categoria}
-                            </span>
-                            
-                            <h3 className="font-black text-slate-900 text-base group-hover:text-[#5A8073] transition">
-                              {producto.nombre}
-                            </h3>
-                            
-                            <div className="mt-3 w-full bg-gray-50 rounded-2xl p-3 text-xs space-y-1.5 text-left border border-gray-100/80">
-                              <div className="flex justify-between items-center">
-                                <span className="font-bold text-slate-500 uppercase text-[10px]">Vehículo:</span>
-                                <span className="font-semibold text-slate-800 text-right">{producto.vehiculo || 'Genérico'}</span>
-                              </div>
-                              <div className="flex justify-between items-center">
-                                <span className="font-bold text-slate-500 uppercase text-[10px]">Marca:</span>
-                                <span className="font-semibold text-slate-800 text-right">{producto.marca || 'N/A'}</span>
-                              </div>
-                              <div className="flex justify-between items-center">
-                                <span className="font-bold text-slate-500 uppercase text-[10px]">Serial:</span>
-                                <span className="font-semibold text-slate-800 text-right font-mono">{producto.serial || 'N/A'}</span>
-                              </div>
-                              <div className="flex justify-between items-center">
-                                <span className="font-bold text-slate-500 uppercase text-[10px]">Años:</span>
-                                <span className="font-semibold text-slate-800 text-right">{producto.anio || 'Todos'}</span>
-                              </div>
+                          {/* Imagen compacta */}
+                          <img 
+                            src={producto.imagen_url} 
+                            alt={producto.nombre} 
+                            className="w-full h-32 object-cover rounded-xl mb-3 group-hover:scale-[1.02] transition duration-300"
+                          />
+                          
+                          <span className="text-[9px] font-extrabold text-[#5A8073] uppercase tracking-wider bg-[#5A8073]/10 px-2.5 py-0.5 rounded-full mb-2">
+                            {producto.categoria}
+                          </span>
+                          
+                          <h3 className="font-black text-slate-900 text-sm text-center group-hover:text-[#5A8073] transition line-clamp-2 mb-3 leading-tight capitalize">
+                            {producto.nombre}
+                          </h3>
+                          
+                          {/* Caja de detalles minimalista (Sin el serial) */}
+                          <div className="w-full bg-gray-50/80 rounded-xl p-2.5 text-[10px] space-y-1.5 text-left border border-gray-100 mb-4 mt-auto">
+                            <div className="flex justify-between items-center">
+                              <span className="font-bold text-slate-400 uppercase tracking-wide text-[9px]">Vehículo:</span>
+                              <span className="font-semibold text-slate-700 text-right truncate max-w-[65%]">{producto.vehiculo || 'Genérico'}</span>
                             </div>
-
-                            <div className="w-full flex items-center justify-between mt-5 px-1" onClick={(e) => e.stopPropagation()}>
-                              <span className="font-black text-xl text-slate-900">${producto.precio}</span>
-                              <button 
-                                onClick={() => agregarAlPedido(producto)}
-                                className="bg-[#5A8073] text-white px-5 py-2.5 rounded-full font-bold text-xs hover:opacity-90 transition shadow-md"
-                              >
-                                AGREGAR
-                              </button>
+                            <div className="flex justify-between items-center">
+                              <span className="font-bold text-slate-400 uppercase tracking-wide text-[9px]">Marca:</span>
+                              <span className="font-semibold text-slate-700 text-right truncate max-w-[65%]">{producto.marca || 'N/A'}</span>
+                            </div>
+                            <div className="flex justify-between items-center">
+                              <span className="font-bold text-slate-400 uppercase tracking-wide text-[9px]">Año:</span>
+                              <span className="font-semibold text-slate-700 text-right truncate max-w-[65%]">{producto.anio || 'Todos'}</span>
                             </div>
                           </div>
+
+                          {/* Precio y Botón en la parte inferior */}
+                          <div className="w-full flex items-center justify-between px-1" onClick={(e) => e.stopPropagation()}>
+                            <span className="font-black text-lg text-slate-900">${producto.precio}</span>
+                            <button 
+                              onClick={() => agregarAlPedido(producto)}
+                              className="bg-[#5A8073] text-white px-4 py-1.5 rounded-full font-bold text-[10px] hover:opacity-90 hover:shadow-md transition"
+                            >
+                              AGREGAR
+                            </button>
+                          </div>
+                        </div>
                         ))}
                       </div>
                     )}
@@ -1482,7 +1553,6 @@ export default function App() {
           )}
         </>
       )}
-
     </div>
   );
 }
